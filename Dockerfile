@@ -1,4 +1,4 @@
-# Fluenta en Railway: Railway usa este Dockerfile automaticamente.
+# Educa en Railway: Railway usa este Dockerfile automaticamente.
 #
 # Etapa 1: compila la app de React (necesita las devDependencies).
 # Etapa 2: solo Node + dist/ + server/. El servidor no tiene dependencias,

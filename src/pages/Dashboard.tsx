@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { Trophy, Clock, Target, ArrowRight } from 'lucide-react';
+import { Trophy, Clock, Target, ArrowRight, Crown, ChevronRight } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import CourseCard from '../components/CourseCard';
 import WeeklyActivity from '../components/WeeklyActivity';
 import WizardMascot from '../components/WizardMascot';
-import { useProgress } from '../ProgressContext';
+import { DAILY_GOAL_MINUTES, minutesToday, useProgress } from '../ProgressContext';
+import { STUDENT_PRICE_MXN, usePlan } from '../PlanContext';
 import { useProfile } from '../ProfileContext';
 import { useT } from '../i18n/I18nContext';
 
@@ -13,11 +14,11 @@ export default function Dashboard() {
   const { profile, courses } = useProfile();
   const { t } = useT();
   const { progress } = useProgress();
-  const weeklyMinutesDone = progress.weekMinutes.reduce((a, b) => a + b, 0);
-  const goalPct = Math.min(
-    Math.round((weeklyMinutesDone / progress.weeklyGoalMinutes) * 100),
-    100,
-  );
+  const { isStudent } = usePlan();
+  const today = minutesToday(progress);
+  const goalPct = Math.min(Math.round((today / DAILY_GOAL_MINUTES) * 100), 100);
+  // Pronunciación y certificación están pensadas para el curso de inglés.
+  const mainCourse = courses.find((c) => c.id === 'en') ?? courses[0];
 
   return (
     <div className="min-h-screen bg-ink-50">
@@ -46,14 +47,9 @@ export default function Dashboard() {
             </div>
             <div>
               <p className="text-lg font-bold text-ink-950">
-                {t('dashboard.weeklyMinutes', {
-                  done: weeklyMinutesDone,
-                  goal: progress.weeklyGoalMinutes,
-                })}
+                {t('dashboard.todayMinutes', { done: today, goal: DAILY_GOAL_MINUTES })}
               </p>
-              <p className="text-xs text-ink-500">
-                {t('dashboard.weeklyGoal', { percent: goalPct })}
-              </p>
+              <p className="text-xs text-ink-500">{t('dashboard.dailyGoal', { percent: goalPct })}</p>
             </div>
           </div>
 
@@ -90,6 +86,67 @@ export default function Dashboard() {
           )}
         </div>
 
+        {mainCourse && (
+          <section className="mt-8" aria-labelledby="practice-heading">
+            <h2 id="practice-heading" className="mb-3 text-sm font-bold text-ink-950">
+              {t('dashboard.practiceHeading')}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <PracticeCard
+                emoji="🎮"
+                color="var(--color-mint-500)"
+                title={t('dashboard.gameTitle')}
+                body={t('dashboard.gameBody')}
+                onClick={() => navigate(`/games/${mainCourse.id}`)}
+              />
+              <PracticeCard
+                emoji="🔊"
+                color="var(--color-brand-600)"
+                title={t('dashboard.pronTitle')}
+                body={t('dashboard.pronBody')}
+                onClick={() => navigate('/pronunciation')}
+              />
+              <PracticeCard
+                emoji="🏆"
+                color="var(--color-amber-500)"
+                title={t('dashboard.certTitle')}
+                body={t('dashboard.certBody')}
+                onClick={() => navigate(`/class/${mainCourse.id}/syllabus`, { state: { focus: 'cert' } })}
+              />
+            </div>
+          </section>
+        )}
+
+        <button
+          type="button"
+          onClick={() => navigate('/plans')}
+          className={`mt-6 flex w-full items-center gap-4 rounded-2xl border-2 p-4 text-left transition ${
+            isStudent
+              ? 'border-violet-500/30 bg-violet-500/5'
+              : 'border-mint-500/40 bg-mint-500/5 hover:border-mint-500'
+          }`}
+        >
+          <div
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+              isStudent ? 'bg-violet-500/10 text-violet-500' : 'bg-mint-500/10 text-mint-500'
+            }`}
+          >
+            <Crown size={18} />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-extrabold text-ink-950">
+              {isStudent ? t('dashboard.planStudentTitle') : t('dashboard.planTitle')}
+            </p>
+            <p className="text-xs text-ink-500">
+              {isStudent ? t('dashboard.planStudentBody') : t('dashboard.planBody', { price: STUDENT_PRICE_MXN })}
+            </p>
+          </div>
+          <span className="hidden items-center gap-1 text-sm font-extrabold text-brand-600 sm:flex">
+            {t('dashboard.planCta')}
+            <ChevronRight size={16} />
+          </span>
+        </button>
+
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <h2 className="mb-3 text-sm font-bold text-ink-950">{t('dashboard.yourCourses')}</h2>
@@ -107,5 +164,33 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
+  );
+}
+
+interface PracticeCardProps {
+  emoji: string;
+  color: string;
+  title: string;
+  body: string;
+  onClick: () => void;
+}
+
+function PracticeCard({ emoji, color, title, body, onClick }: PracticeCardProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{ ['--duo-shadow' as string]: 'var(--color-ink-100)' }}
+      className="duo-btn group flex flex-col items-start rounded-2xl border-2 border-ink-100 bg-white p-4 text-left transition hover:border-ink-300"
+    >
+      <span
+        className="flex h-11 w-11 items-center justify-center rounded-xl text-2xl"
+        style={{ background: `color-mix(in srgb, ${color} 14%, white)` }}
+      >
+        {emoji}
+      </span>
+      <span className="mt-3 text-sm font-extrabold text-ink-950">{title}</span>
+      <span className="mt-1 text-xs leading-relaxed text-ink-500">{body}</span>
+    </button>
   );
 }

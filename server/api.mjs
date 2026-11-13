@@ -1,5 +1,5 @@
 /**
- * Backend de Tandem. Cero dependencias: solo Node.
+ * Backend de Educa. Cero dependencias: solo Node.
  *
  * El MISMO handler corre en desarrollo (montado en Vite, ver vite.config.ts)
  * y en produccion (server/index.mjs en Railway). Una sola implementacion.

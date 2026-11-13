@@ -1,4 +1,4 @@
-# Fluenta — Guía de voz y backend
+# Educa — Guía de voz y backend
 
 Guía para quien trabaje el frontend. Explica cómo funciona el tutor de voz,
 qué ya está hecho, qué falta, y las reglas que no se pueden romper.

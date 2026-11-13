@@ -2,7 +2,8 @@
 export const DURATION_OPTIONS = [5, 10, 15, 20, 0] as const;
 
 const KEY = 'fluenta-lesson-minutes';
-const DEFAULT_MINUTES = 10;
+/** 15 minutos al día: la meta con la que se presenta la app. */
+const DEFAULT_MINUTES = 15;
 
 /** La última duración elegida, para proponerla en la siguiente lección. */
 export function loadPreferredMinutes(): number {

@@ -80,7 +80,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Tandem escuchando en :${PORT}`);
+  console.log(`Educa escuchando en :${PORT}`);
   if (!process.env.ASSEMBLYAI_API_KEY) console.warn('AVISO: falta ASSEMBLYAI_API_KEY');
   if (!existsSync(join(DIST, 'index.html'))) console.warn(`AVISO: no hay build en ${DIST}. Corre npm run build.`);
 });

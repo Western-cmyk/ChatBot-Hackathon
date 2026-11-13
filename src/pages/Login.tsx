@@ -37,7 +37,7 @@ export default function Login() {
       <div className="relative w-full max-w-sm">
         <div className="mb-5 flex flex-col items-center text-center">
           <WizardMascot size={136} className="drop-shadow-2xl" />
-          <span className="mt-1 text-xl font-extrabold tracking-tight text-white">Fluenta</span>
+          <span className="mt-1 text-xl font-extrabold tracking-tight text-white">{t('brand.name')}</span>
           <p className="mt-1 text-sm text-white/80">{t('login.tagline')}</p>
         </div>
 

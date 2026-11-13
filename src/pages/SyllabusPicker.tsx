@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Check, Flame, Lock, Star, Trophy, X, Zap } from 'lucide-react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, BookOpen, Check, Crown, Flame, Lock, Star, Trophy, X, Zap } from 'lucide-react';
 import { useProfile } from '../ProfileContext';
 import { LESSON_XP, REVIEW_XP, useProgress } from '../ProgressContext';
 import { getLanguage } from '../data/languages';
@@ -10,7 +10,8 @@ import { useT } from '../i18n/I18nContext';
 import WizardMascot from '../components/WizardMascot';
 import { loadPreferredMinutes, savePreferredMinutes } from '../data/lessonDuration';
 import DurationPicker from '../components/DurationPicker';
-import { SCENARIOS, SCENARIO_GOAL_XP, type Scenario } from '../data/scenarios';
+import { examsFor, FREE_EXAMS, ROLE_PLAYS, SCENARIO_GOAL_XP, type Scenario } from '../data/scenarios';
+import { usePlan } from '../PlanContext';
 import { gloss } from '../data/flashcards';
 import { canSpeak } from '../voice/agentConfig';
 
@@ -31,6 +32,9 @@ const shade = (color: string) => `color-mix(in srgb, ${color} 72%, black)`;
 export default function SyllabusPicker() {
   const { courseId = '' } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const focusCert = (location.state as { focus?: string } | null)?.focus === 'cert';
+  const { isStudent } = usePlan();
   const { courses, profile } = useProfile();
   const { progress, isCompleted } = useProgress();
   const { t, lang } = useT();
@@ -40,6 +44,8 @@ export default function SyllabusPicker() {
   const [minutes, setMinutes] = useState(loadPreferredMinutes);
   const [openScenario, setOpenScenario] = useState<Scenario | null>(null);
   const currentRef = useRef<HTMLDivElement>(null);
+  const certRef = useRef<HTMLElement>(null);
+  const exams = useMemo(() => examsFor(courseId), [courseId]);
 
   const startLevel = profile?.languages.find((l) => l.languageId === courseId)?.levelCode;
   const sections = useMemo(() => {
@@ -49,8 +55,9 @@ export default function SyllabusPicker() {
   }, [courseId, startLevel, lang, isCompleted]);
 
   useEffect(() => {
-    currentRef.current?.scrollIntoView({ block: 'center' });
-  }, []);
+    if (focusCert) certRef.current?.scrollIntoView({ block: 'start' });
+    else currentRef.current?.scrollIntoView({ block: 'center' });
+  }, [focusCert]);
 
   if (!course) {
     return (
@@ -75,6 +82,15 @@ export default function SyllabusPicker() {
     navigate(`/class/${courseId}`, {
       state: { topic: node.topic.title, topicId: node.topic.id, levelCode: node.levelCode, minutes },
     });
+  };
+
+  const openSheet = (scenario: Scenario) => {
+    // Los simulacros de certificación (menos el de nivel) son del plan Estudiante.
+    if (scenario.exam && !isStudent && !FREE_EXAMS.includes(scenario.id)) {
+      navigate('/plans');
+      return;
+    }
+    setOpenScenario(scenario);
   };
 
   const startScenario = (scenario: Scenario) => {
@@ -126,11 +142,11 @@ export default function SyllabusPicker() {
           </h2>
           <p className="mt-0.5 text-sm text-ink-500">{t('sim.subtitle')}</p>
           <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-2">
-            {SCENARIOS.map((sc) => (
+            {ROLE_PLAYS.map((sc) => (
               <button
                 key={sc.id}
                 type="button"
-                onClick={() => setOpenScenario(sc)}
+                onClick={() => openSheet(sc)}
                 style={{ ['--duo-shadow' as string]: 'var(--color-ink-100)' }}
                 className="duo-btn flex w-36 shrink-0 flex-col items-start rounded-2xl border-2 border-ink-100 bg-white p-3 text-left transition hover:border-violet-500/40"
               >
@@ -143,6 +159,41 @@ export default function SyllabusPicker() {
             ))}
           </div>
         </section>
+
+        {exams.length > 0 && (
+          <section ref={certRef} id="cert" className="mb-10 scroll-mt-20" aria-labelledby="cert-heading">
+            <h2 id="cert-heading" className="text-base font-extrabold text-ink-950">
+              🏆 {t('cert.title')}
+            </h2>
+            <p className="mt-0.5 text-sm text-ink-500">{t('cert.subtitle')}</p>
+            <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-2">
+              {exams.map((sc) => {
+                const locked = !isStudent && !FREE_EXAMS.includes(sc.id);
+                return (
+                  <button
+                    key={sc.id}
+                    type="button"
+                    onClick={() => openSheet(sc)}
+                    style={{ ['--duo-shadow' as string]: 'var(--color-ink-100)' }}
+                    className="duo-btn relative flex w-40 shrink-0 flex-col items-start rounded-2xl border-2 border-ink-100 bg-white p-3 text-left transition hover:border-amber-500/50"
+                  >
+                    {locked && (
+                      <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-violet-500/10 px-1.5 py-0.5 text-[10px] font-extrabold text-violet-500">
+                        <Crown size={10} />
+                        {t('nav.planStudent')}
+                      </span>
+                    )}
+                    <span className="text-3xl">{sc.emoji}</span>
+                    <span className="mt-2 text-sm font-extrabold leading-tight text-ink-950">{gloss(sc.title, lang)}</span>
+                    <span className="mt-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-extrabold text-ink-700">
+                      {sc.exam}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
         {sections.map((section, sectionIndex) => (
           <Section

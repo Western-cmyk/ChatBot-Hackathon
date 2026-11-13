@@ -6,6 +6,14 @@ const STORAGE_KEY = 'fluenta-progress';
 export const LESSON_XP = 20;
 export const REVIEW_XP = 5;
 
+/** Meta diaria: 15 minutos al día, que caben entre la escuela y el trabajo. */
+export const DAILY_GOAL_MINUTES = 15;
+
+/** Minutos practicados hoy (lunes = índice 0 de `weekMinutes`). */
+export function minutesToday(progress: UserProgress, today = new Date()): number {
+  return progress.weekMinutes[(today.getDay() + 6) % 7] ?? 0;
+}
+
 export interface UserProgress {
   xp: number;
   streakDays: number;
@@ -46,7 +54,7 @@ function freshProgress(): UserProgress {
     lastActiveDate: null,
     weekStart: mondayOf(new Date()),
     weekMinutes: [0, 0, 0, 0, 0, 0, 0],
-    weeklyGoalMinutes: 150,
+    weeklyGoalMinutes: DAILY_GOAL_MINUTES * 7,
     completedTopics: [],
   };
 }

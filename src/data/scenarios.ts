@@ -14,7 +14,14 @@ export interface Scenario {
   /** Mazo de flashcards que acompaña la simulación. */
   theme: Theme;
   /** Nivel sugerido (se puede practicar en cualquier nivel). */
-  level: 'A1' | 'A2' | 'B1';
+  level: 'A1' | 'A2' | 'B1' | 'B2';
+  /**
+   * Simulacro de certificación: nombre del examen. Sabio hace de examinador.
+   * Sin `exam` es una simulación de la vida real.
+   */
+  exam?: string;
+  /** Cursos donde aparece (ids de idioma). Sin lista: en todos. */
+  languages?: string[];
   title: Gloss;
   description: Gloss;
   role: string;
@@ -202,7 +209,197 @@ export const SCENARIOS: Scenario[] = [
       de: 'Hallo! Ich glaube, wir kennen uns noch nicht. Ich bin Alex!',
     },
   },
+  // ---------------------------------------------------------- certificación
+  {
+    id: 'placement',
+    emoji: '📊',
+    theme: 'greetings',
+    level: 'A1',
+    exam: 'CEFR',
+    title: { es: '¿Qué nivel tengo? (A1 a C1)', en: "What's my level? (A1 to C1)" },
+    description: {
+      es: 'Examen corto de nivel: las preguntas se van haciendo más difíciles.',
+      en: 'A short level test: the questions get harder as you go.',
+    },
+    role: "a friendly placement examiner who finds the student's CEFR level",
+    studentRole: 'a student taking a placement test',
+    situation:
+      'Start with very easy questions (A1) and make each new question a bit harder (A2, B1, B2, C1) while the student answers well. If they struggle twice, stay at that level. When the mission is done, tell them their estimated CEFR level and one thing to improve.',
+    goals: [
+      { prompt: 'introduce themselves', label: { es: 'Preséntate', en: 'Introduce yourself' } },
+      { prompt: 'talk about something they did in the past', label: { es: 'Cuenta algo que hiciste en el pasado', en: 'Talk about something you did in the past' } },
+      { prompt: 'give an opinion and explain why', label: { es: 'Da una opinión y explica por qué', en: 'Give an opinion and explain why' } },
+    ],
+    greeting: {
+      en: "Hi! Let's find your level. Easy start: what's your name, and where are you from?",
+      es: '¡Hola! Vamos a ver tu nivel. Empecemos fácil: ¿cómo te llamas y de dónde eres?',
+      fr: "Bonjour ! On va trouver ton niveau. Pour commencer : comment tu t'appelles et d'où viens-tu ?",
+      de: 'Hallo! Wir finden jetzt dein Niveau. Zum Start: Wie heißt du und woher kommst du?',
+    },
+  },
+  {
+    id: 'toefl',
+    emoji: '🎓',
+    theme: 'feelings',
+    level: 'B2',
+    exam: 'TOEFL iBT',
+    languages: ['en'],
+    title: { es: 'TOEFL: pregunta de opinión', en: 'TOEFL: opinion question' },
+    description: {
+      es: 'Contesta como en la sección de Speaking del TOEFL y recibe una calificación de 0 a 4.',
+      en: 'Answer like in the TOEFL Speaking section and get a score from 0 to 4.',
+    },
+    role: 'a TOEFL iBT Speaking examiner running a practice independent speaking task',
+    studentRole: 'a test taker preparing for the TOEFL',
+    situation:
+      'Ask ONE independent speaking question at a time about personal preferences (for example studying alone or in a group, living in a city or in the countryside). After each answer, give a score from 0 to 4 with one concrete tip, like a TOEFL rater, then ask the next question.',
+    goals: [
+      { prompt: 'state a clear opinion', label: { es: 'Da una opinión clara', en: 'State a clear opinion' } },
+      { prompt: 'give at least two reasons', label: { es: 'Da al menos dos razones', en: 'Give at least two reasons' } },
+      { prompt: 'support a reason with a specific personal example', label: { es: 'Apoya una razón con un ejemplo personal', en: 'Support a reason with a personal example' } },
+    ],
+    greeting: {
+      en: 'Welcome to your TOEFL speaking practice. First question: do you prefer to study alone or in a group? Why?',
+    },
+  },
+  {
+    id: 'duolingo-test',
+    emoji: '📝',
+    theme: 'leisure',
+    level: 'B1',
+    exam: 'Duolingo English Test',
+    languages: ['en'],
+    title: { es: 'Duolingo English Test: habla de un tema', en: 'Duolingo English Test: speak about a topic' },
+    description: {
+      es: 'Habla de 30 a 60 segundos sobre un tema, como en el examen.',
+      en: 'Speak for 30 to 60 seconds about a topic, like in the test.',
+    },
+    role: 'a Duolingo English Test practice coach giving "speak about the topic" tasks',
+    studentRole: 'a test taker preparing for the Duolingo English Test',
+    situation:
+      'Give ONE short speaking prompt at a time (for example: describe a place you love to visit, talk about a skill you want to learn). Let the student speak for 30 to 60 seconds without interrupting. Then give brief feedback on fluency and vocabulary, and the next prompt.',
+    goals: [
+      { prompt: 'describe the situation with details (who, where, when)', label: { es: 'Describe con detalles (quién, dónde, cuándo)', en: 'Describe it with details (who, where, when)' } },
+      { prompt: 'explain why it matters to them', label: { es: 'Explica por qué es importante para ti', en: 'Explain why it matters to you' } },
+      { prompt: 'use a connector like because, however or for example', label: { es: 'Usa un conector: because, however, for example', en: 'Use a connector: because, however, for example' } },
+    ],
+    greeting: {
+      en: "Let's practice for the Duolingo English Test. Talk about a place you love to visit. You have one minute.",
+    },
+  },
+  {
+    id: 'cambridge-b2',
+    emoji: '🗣️',
+    theme: 'discourse',
+    level: 'B2',
+    exam: 'Cambridge B2 First',
+    languages: ['en'],
+    title: { es: 'Cambridge B2 First: entrevista', en: 'Cambridge B2 First: interview' },
+    description: {
+      es: 'Partes 1 y 3 del Speaking: preguntas personales y una discusión.',
+      en: 'Speaking Parts 1 and 3: personal questions and a discussion.',
+    },
+    role: 'a Cambridge B2 First Speaking examiner (the interlocutor)',
+    studentRole: 'a candidate taking the B2 First Speaking test',
+    situation:
+      'Run Part 1 (short personal questions about home, studies and free time), then Part 3 (a question with two options; ask the candidate to compare them and choose one). Ask ONE question at a time.',
+    goals: [
+      { prompt: 'answer a personal question with details, not just yes or no', label: { es: 'Responde una pregunta personal con detalles', en: 'Answer a personal question with details' } },
+      { prompt: 'compare two options and choose one', label: { es: 'Compara dos opciones y elige una', en: 'Compare two options and choose one' } },
+      { prompt: 'agree or disagree politely, or ask the examiner a follow-up question', label: { es: 'Da tu acuerdo o desacuerdo con cortesía', en: 'Agree or disagree politely' } },
+    ],
+    greeting: {
+      en: 'Good afternoon. Can you tell me your name and where you are from?',
+    },
+  },
+  {
+    id: 'dele-b1',
+    emoji: '🇪🇸',
+    theme: 'travel',
+    level: 'B1',
+    exam: 'DELE B1',
+    languages: ['es'],
+    title: { es: 'DELE B1: expresión oral', en: 'DELE B1: speaking' },
+    description: {
+      es: 'Presenta un tema y responde las preguntas del examinador.',
+      en: "Present a topic and answer the examiner's questions.",
+    },
+    role: 'a DELE B1 oral exam examiner (Instituto Cervantes)',
+    studentRole: 'a candidate taking the DELE B1 oral exam',
+    situation:
+      'The candidate talks about a topic (for example their ideal holiday) for about two minutes, then you ask follow-up questions. Ask ONE question at a time.',
+    goals: [
+      { prompt: 'present the topic in an organized way', label: { es: 'Presenta el tema con orden', en: 'Present the topic in an organized way' } },
+      { prompt: 'answer a follow-up question with details', label: { es: 'Responde una pregunta con detalles', en: 'Answer a follow-up question with details' } },
+      { prompt: 'talk about a past experience', label: { es: 'Cuenta una experiencia pasada', en: 'Talk about a past experience' } },
+    ],
+    greeting: {
+      es: '¡Bienvenido al examen oral del DELE B1! Háblame de tus vacaciones ideales: ¿adónde irías y por qué?',
+    },
+  },
+  {
+    id: 'delf-b1',
+    emoji: '🇫🇷',
+    theme: 'feelings',
+    level: 'B1',
+    exam: 'DELF B1',
+    languages: ['fr'],
+    title: { es: 'DELF B1: producción oral', en: 'DELF B1: speaking' },
+    description: {
+      es: 'Preséntate y defiende un punto de vista, como en el DELF.',
+      en: 'Introduce yourself and defend a point of view, like in the DELF.',
+    },
+    role: 'a DELF B1 oral exam examiner',
+    studentRole: 'a candidate taking the DELF B1 oral exam',
+    situation:
+      'Part 1: a short guided interview about the candidate. Part 3: give a short opinion topic and ask the candidate to defend a point of view. Ask ONE question at a time.',
+    goals: [
+      { prompt: 'introduce themselves (studies, hobbies, plans)', label: { es: 'Preséntate (estudios, pasatiempos, planes)', en: 'Introduce yourself (studies, hobbies, plans)' } },
+      { prompt: 'defend a point of view with arguments', label: { es: 'Defiende un punto de vista con argumentos', en: 'Defend a point of view with arguments' } },
+      { prompt: "react to the examiner's question with an example", label: { es: 'Responde al examinador con un ejemplo', en: 'Answer the examiner with an example' } },
+    ],
+    greeting: {
+      fr: "Bienvenue à l'épreuve orale du DELF B1. Pour commencer, présentez-vous : vos études, vos loisirs, vos projets.",
+    },
+  },
+  {
+    id: 'goethe-b1',
+    emoji: '🇩🇪',
+    theme: 'leisure',
+    level: 'B1',
+    exam: 'Goethe-Zertifikat B1',
+    languages: ['de'],
+    title: { es: 'Goethe-Zertifikat B1: Sprechen', en: 'Goethe-Zertifikat B1: speaking' },
+    description: {
+      es: 'Planea algo con el examinador y da tu opinión, como en el examen.',
+      en: 'Plan something with the examiner and give your opinion, like in the test.',
+    },
+    role: 'a Goethe-Zertifikat B1 speaking examiner',
+    studentRole: 'a candidate taking the Goethe-Zertifikat B1 speaking test',
+    situation:
+      'Part 1: plan something together (for example a trip or a party for a friend). Part 3: ask for the candidate\'s opinion on a simple topic. Ask ONE question at a time.',
+    goals: [
+      { prompt: 'introduce themselves', label: { es: 'Preséntate', en: 'Introduce yourself' } },
+      { prompt: 'plan something together with the examiner (agree on a day or an idea)', label: { es: 'Planea algo con el examinador', en: 'Plan something with the examiner' } },
+      { prompt: 'give an opinion with a reason', label: { es: 'Da tu opinión con una razón', en: 'Give your opinion with a reason' } },
+    ],
+    greeting: {
+      de: 'Willkommen zur mündlichen Prüfung Goethe-Zertifikat B1. Stellen Sie sich bitte kurz vor.',
+    },
+  },
 ];
+
+
+/** Simulaciones de la vida real (sin examen). */
+export const ROLE_PLAYS = SCENARIOS.filter((s) => !s.exam);
+
+/** Simulacros de certificación disponibles para un curso. */
+export function examsFor(languageId: string): Scenario[] {
+  return SCENARIOS.filter((s) => s.exam && (!s.languages || s.languages.includes(languageId)));
+}
+
+/** El examen de nivel es gratis; los demás simulacros son del plan Estudiante. */
+export const FREE_EXAMS = ['placement'];
 
 export function getScenario(id: string | undefined): Scenario | null {
   return SCENARIOS.find((s) => s.id === id) ?? null;

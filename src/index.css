@@ -202,3 +202,44 @@ body {
 .animate-card-pop {
   animation: card-pop 0.25s ease-out;
 }
+
+/* Juego de vocabulario: pareja equivocada. */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+/* Mini-lecciones: Sabio "habla" mientras suena la voz. */
+@keyframes talk {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.04) rotate(-1.5deg); }
+  75% { transform: scale(1.02) rotate(1.5deg); }
+}
+
+.animate-talk {
+  animation: talk 0.45s ease-in-out infinite;
+  transform-origin: 50% 90%;
+}
+
+/* Palabra que aparece en pantalla. */
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-word-in {
+  animation: word-in 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-shake,
+  .animate-talk,
+  .animate-word-in {
+    animation: none;
+  }
+}

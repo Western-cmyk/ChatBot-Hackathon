@@ -1,3 +1,5 @@
+import { FEATURE_STRINGS } from './features';
+
 export type UILang = 'es' | 'en' | 'fr' | 'ja' | 'de';
 
 export const SUPPORTED_UI_LANGS: UILang[] = ['es', 'en', 'fr', 'ja', 'de'];
@@ -25,7 +27,7 @@ const es: LangPack = {
     'dashboard.inProgress': 'En progreso',
     'dashboard.tutorCalloutTitle': 'Sabio te espera para tu próxima clase',
     'dashboard.tutorCalloutBody':
-      'Practica conversación con tu tutor de IA cuando quieras, sin agendar nada.',
+      'Tu clase de inglés en línea: 15 minutos al día con tu tutor de IA, sin agendar nada.',
     'dashboard.startClassNow': 'Iniciar clase ahora',
     'dashboard.yourCourses': 'Tus cursos',
     'dashboard.statistics': 'Estadísticas',
@@ -167,7 +169,7 @@ const es: LangPack = {
     'onboarding.pending': "Pendiente…",
     'onboarding.none': "Ninguno",
 
-    'login.tagline': 'Practica idiomas hablando con tu tutor de IA, en cualquier lugar del mundo 🌍',
+    'login.tagline': 'Clases de inglés en línea con tu tutor de IA. Habla 15 min al día y empieza gratis 🌍',
     'login.welcomeBack': 'Bienvenido de nuevo',
     'login.subheading': 'Inicia sesión para continuar tu clase',
     'login.emailLabel': 'Correo electrónico',
@@ -179,9 +181,9 @@ const es: LangPack = {
     'login.noAccount': '¿No tienes cuenta?',
     'login.signUpFree': 'Regístrate gratis',
     'login.demoNotice': 'Demo — cualquier correo y contraseña funcionan',
-    'login.statLanguages': '+40 idiomas',
-    'login.statAvailability': 'Disponible 24/7',
-    'login.statFeedback': 'Feedback en tiempo real',
+    'login.statLanguages': 'Plan gratis',
+    'login.statAvailability': '15 min al día',
+    'login.statFeedback': 'Corrección al instante',
   },
   tutorReplies: [
     '¡Buen intento! Casi perfecto — recuerda que en este caso el verbo va en pasado. ¿Quieres que lo repasemos juntos?',
@@ -220,7 +222,7 @@ const en: LangPack = {
     'dashboard.inProgress': 'In progress',
     'dashboard.tutorCalloutTitle': 'Sabio is ready for your next class',
     'dashboard.tutorCalloutBody':
-      'Practice conversation with your AI tutor whenever you want, no scheduling needed.',
+      'Your online English class: 15 minutes a day with your AI tutor, no scheduling needed.',
     'dashboard.startClassNow': 'Start class now',
     'dashboard.yourCourses': 'Your courses',
     'dashboard.statistics': 'Statistics',
@@ -363,7 +365,7 @@ const en: LangPack = {
     'onboarding.pending': "Pending…",
     'onboarding.none': "None",
 
-    'login.tagline': 'Practice languages by talking with your AI tutor, anywhere in the world 🌍',
+    'login.tagline': 'Online English classes with your AI tutor. Speak 15 min a day and start for free 🌍',
     'login.welcomeBack': 'Welcome back',
     'login.subheading': 'Sign in to continue your class',
     'login.emailLabel': 'Email',
@@ -375,9 +377,9 @@ const en: LangPack = {
     'login.noAccount': "Don't have an account?",
     'login.signUpFree': 'Sign up for free',
     'login.demoNotice': 'Demo — any email and password work',
-    'login.statLanguages': '40+ languages',
-    'login.statAvailability': 'Available 24/7',
-    'login.statFeedback': 'Real-time feedback',
+    'login.statLanguages': 'Free plan',
+    'login.statAvailability': '15 min a day',
+    'login.statFeedback': 'Instant correction',
   },
   tutorReplies: [
     'Good try! Almost perfect — remember the verb goes in the past tense here. Want to go over it together?',
@@ -571,9 +573,9 @@ const fr: LangPack = {
     'login.noAccount': 'Pas encore de compte ?',
     'login.signUpFree': 'Inscris-toi gratuitement',
     'login.demoNotice': "Démo — n'importe quel e-mail et mot de passe fonctionnent",
-    'login.statLanguages': '+40 langues',
-    'login.statAvailability': 'Disponible 24/7',
-    'login.statFeedback': 'Retour en temps réel',
+    'login.statLanguages': 'Plan gratuit',
+    'login.statAvailability': '15 min par jour',
+    'login.statFeedback': 'Correction instantanée',
   },
   tutorReplies: [
     "Bien essayé ! Presque parfait — n'oublie pas que le verbe est au passé ici. On revoit ça ensemble ?",
@@ -764,9 +766,9 @@ const ja: LangPack = {
     'login.noAccount': 'アカウントをお持ちでないですか？',
     'login.signUpFree': '無料で登録',
     'login.demoNotice': 'デモ版 — どのメールとパスワードでも動作します',
-    'login.statLanguages': '40以上の言語',
-    'login.statAvailability': '24時間365日利用可能',
-    'login.statFeedback': 'リアルタイムフィードバック',
+    'login.statLanguages': '無料プラン',
+    'login.statAvailability': '1日15分',
+    'login.statFeedback': 'その場で添削',
   },
   tutorReplies: [
     'いい感じです！ほぼ完璧ですが、ここでは動詞が過去形になることを覚えておいてくださいね。一緒に復習しましょうか？',
@@ -961,9 +963,9 @@ const de: LangPack = {
     'login.noAccount': 'Noch kein Konto?',
     'login.signUpFree': 'Kostenlos registrieren',
     'login.demoNotice': 'Demo — jede E-Mail und jedes Passwort funktionieren',
-    'login.statLanguages': '40+ Sprachen',
-    'login.statAvailability': 'Rund um die Uhr verfügbar',
-    'login.statFeedback': 'Feedback in Echtzeit',
+    'login.statLanguages': 'Gratis-Plan',
+    'login.statAvailability': '15 Min. am Tag',
+    'login.statFeedback': 'Sofortige Korrektur',
   },
   tutorReplies: [
     'Guter Versuch! Fast perfekt — denk daran, dass das Verb hier im Präteritum steht. Sollen wir das zusammen wiederholen?',
@@ -1006,7 +1008,12 @@ export function translate(
   key: string,
   vars?: Record<string, string | number>,
 ): string {
-  const template = packs[lang].strings[key] ?? packs.en.strings[key] ?? key;
+  const template =
+    packs[lang].strings[key] ??
+    FEATURE_STRINGS[lang]?.[key] ??
+    packs.en.strings[key] ??
+    FEATURE_STRINGS.en[key] ??
+    key;
   return interpolate(template, vars);
 }
 

@@ -1,15 +1,17 @@
-import { Flame, LogOut, Zap } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Crown, Flame, LogOut, Zap } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { useProfile } from '../ProfileContext';
 import { useT } from '../i18n/I18nContext';
 import { useProgress } from '../ProgressContext';
+import { usePlan } from '../PlanContext';
 import WizardMascot from './WizardMascot';
 
 export default function Navbar() {
   const { logout } = useAuth();
   const { profile } = useProfile();
   const { progress } = useProgress();
+  const { isStudent } = usePlan();
   const { t } = useT();
   const navigate = useNavigate();
   const name = profile?.name || '?';
@@ -21,15 +23,25 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-10 border-b border-ink-100 bg-white/80 backdrop-blur">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <div className="flex items-center gap-2">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-4 sm:px-6">
+        <Link to="/dashboard" className="flex items-center gap-2">
           <WizardMascot size={40} />
-          <span className="text-base font-extrabold tracking-tight text-ink-950">Fluenta</span>
-        </div>
+          <span className="text-base font-extrabold tracking-tight text-ink-950">{t('brand.name')}</span>
+        </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link
+            to="/plans"
+            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+              isStudent ? 'bg-violet-500/10 text-violet-500' : 'bg-mint-500/10 text-mint-500 hover:bg-mint-500/20'
+            }`}
+          >
+            <Crown size={15} />
+            <span className="hidden sm:inline">{isStudent ? t('nav.planStudent') : t('nav.planFree')}</span>
+            <span className="sr-only sm:hidden">{t('nav.plans')}</span>
+          </Link>
           <div
-            className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold ${
+            className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold ${
               progress.streakDays > 0 ? 'bg-amber-500/10 text-amber-500' : 'bg-ink-50 text-ink-300'
             }`}
           >

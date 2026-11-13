@@ -2,12 +2,16 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext';
 import { ProfileProvider, useProfile } from './ProfileContext';
 import { ProgressProvider } from './ProgressContext';
+import { PlanProvider } from './PlanContext';
 import { I18nProvider } from './i18n/I18nContext';
 import Login from './pages/Login';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import SyllabusPicker from './pages/SyllabusPicker';
 import ClassRoom from './pages/ClassRoom';
+import Plans from './pages/Plans';
+import VocabGame from './pages/VocabGame';
+import Pronunciation from './pages/Pronunciation';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
@@ -46,6 +50,30 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/plans"
+        element={
+          <ProtectedRoute>
+            <Plans />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/games/:courseId"
+        element={
+          <ProtectedRoute>
+            <VocabGame />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/pronunciation"
+        element={
+          <ProtectedRoute>
+            <Pronunciation />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
@@ -55,11 +83,13 @@ export default function App() {
   return (
     <AuthProvider>
       <ProgressProvider>
-        <ProfileProvider>
-          <I18nProvider>
-            <AppRoutes />
-          </I18nProvider>
-        </ProfileProvider>
+        <PlanProvider>
+          <ProfileProvider>
+            <I18nProvider>
+              <AppRoutes />
+            </I18nProvider>
+          </ProfileProvider>
+        </PlanProvider>
       </ProgressProvider>
     </AuthProvider>
   );

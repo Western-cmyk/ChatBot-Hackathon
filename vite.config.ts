@@ -10,7 +10,7 @@ import { handleApi } from './server/api.mjs'
  */
 function apiDevServer(): Plugin {
   return {
-    name: 'tandem-api-dev',
+    name: 'educa-api-dev',
     apply: 'serve',
     configureServer(server) {
       // Sin prefijo de ruta a proposito: si se monta en '/api', connect le
