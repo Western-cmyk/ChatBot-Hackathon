@@ -29,3 +29,6 @@ dist-ssr
 
 # paquetes para compartir
 *.zip
+
+# material del video (se genera en local)
+presentacion/
